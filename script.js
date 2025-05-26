@@ -9,6 +9,9 @@ const diceCountInput = document.getElementById('dice-count');
 const decreaseDiceBtn = document.getElementById('decrease-dice');
 const increaseDiceBtn = document.getElementById('increase-dice');
 const rollTotalDisplay = document.getElementById('roll-total');
+const showAllBtn = document.getElementById('show-all-btn');
+const showMineBtn = document.getElementById('show-mine-btn');
+const loadingIndicator = document.getElementById('loading-indicator');
 
 // App State
 let selectedDice = null;
@@ -16,42 +19,83 @@ let userName = '';
 let rollHistory = [];
 let diceCount = 1;
 let userId = null;
+let showOnlyMyRolls = false;
+let subscription = null;
 
-// Check for saved user and history in localStorage
-const initializeFromLocalStorage = () => {
+// Initialize app and load data from Supabase
+const initialize = async () => {
+    // Get saved user data
     const savedUserName = localStorage.getItem('dndDiceRollerUserName');
-    const savedHistory = localStorage.getItem('dndDiceRollerHistory');
-    const savedUserId = localStorage.getItem('dndDiceRollerUserId');
+    const savedUserId = localStorage.getItem('supabaseUserId');
     
     if (savedUserName) {
         userName = savedUserName;
         userNameInput.value = userName;
     }
     
-    if (savedUserId) {
-        userId = savedUserId;
-    } else {
-        // Generate a unique user ID if not present
-        userId = 'user_' + Math.random().toString(36).substring(2, 15);
-        localStorage.setItem('dndDiceRollerUserId', userId);
-    }
+    // Set up real-time subscription
+    setupRealtimeSubscription();
     
-    if (savedHistory) {
-        try {
-            rollHistory = JSON.parse(savedHistory);
-            updateHistoryDisplay();
-        } catch (e) {
-            console.error('Error loading history from localStorage:', e);
-            rollHistory = [];
+    // Load initial history data
+    await loadRollHistory();
+};
+
+// Save user name to localStorage
+const saveUserName = () => {
+    localStorage.setItem('dndDiceRollerUserName', userName);
+};
+
+// Load roll history from Supabase
+const loadRollHistory = async () => {
+    // Show loading indicator
+    loadingIndicator.classList.remove('hidden');
+    historyList.innerHTML = '';
+    
+    try {
+        // Fetch rolls based on filter
+        let data;
+        if (showOnlyMyRolls && userId) {
+            data = await window.supabaseAPI.fetchUserRolls(userId);
+        } else {
+            data = await window.supabaseAPI.fetchAllRolls();
         }
+        
+        // Update local history array
+        rollHistory = data;
+        
+        // Update the display
+        updateHistoryDisplay();
+    } catch (error) {
+        console.error('Error loading roll history:', error);
+        historyList.innerHTML = '<div class="no-history">Failed to load history</div>';
+    } finally {
+        // Hide loading indicator
+        loadingIndicator.classList.add('hidden');
     }
 };
 
-// Save state to localStorage
-const saveToLocalStorage = () => {
-    localStorage.setItem('dndDiceRollerUserName', userName);
-    localStorage.setItem('dndDiceRollerHistory', JSON.stringify(rollHistory));
-    localStorage.setItem('dndDiceRollerUserId', userId);
+// Set up real-time subscription to new rolls
+const setupRealtimeSubscription = () => {
+    // Clean up existing subscription if present
+    if (subscription) {
+        subscription.unsubscribe();
+    }
+    
+    // Set up new subscription
+    subscription = window.supabaseAPI.subscribeToRolls(newRoll => {
+        // Check if this is a new roll we don't have yet
+        const isNewRoll = !rollHistory.some(roll => roll.id === newRoll.id);
+        
+        if (isNewRoll) {
+            // If showing only my rolls, check if this is my roll
+            if (showOnlyMyRolls && newRoll.user_id !== userId) {
+                return; // Skip this roll if we're only showing my rolls
+            }
+            
+            // Fetch the complete roll data with user info
+            loadRollHistory();
+        }
+    });
 };
 
 // Update the display of the history list
@@ -70,27 +114,35 @@ const updateHistoryDisplay = () => {
         historyItem.className = 'history-item';
         
         // Add a special class if this is the current user's roll
-        if (item.userId === userId) {
+        if (item.user_id === userId) {
             historyItem.classList.add('my-roll');
         }
         
+        // Get the user name from the nested users object
+        const userName = item.users ? item.users.user_name : 'Anonymous';
+        
         // Format result based on whether it's a single die or multiple dice
         let resultDisplay;
-        if (Array.isArray(item.result)) {
+        if (Array.isArray(item.results) && item.results.length > 1) {
             resultDisplay = `
                 <div class="roll-value">
-                    <span class="roll-individual">${item.result.join(', ')}</span>
+                    <span class="roll-individual">${item.results.join(', ')}</span>
                     <span class="roll-total">Total: ${item.total}</span>
                 </div>
             `;
         } else {
-            resultDisplay = `<div class="roll-value">${item.result}</div>`;
+            const result = Array.isArray(item.results) ? item.results[0] : item.results;
+            resultDisplay = `<div class="roll-value">${result}</div>`;
         }
+        
+        // Format timestamp
+        const timestamp = new Date(item.created_at).toLocaleString();
         
         historyItem.innerHTML = `
             <div class="roll-info">
-                <span class="roll-user">${item.user || 'Anonymous'}</span>
-                <span class="roll-dice">rolled ${item.dice}</span>
+                <span class="roll-user">${userName}</span>
+                <span class="roll-dice">rolled ${item.dice_type}</span>
+                <span class="roll-time">${timestamp}</span>
             </div>
             ${resultDisplay}
         `;
@@ -141,13 +193,25 @@ diceButtons.forEach(button => {
 });
 
 // Handle user name input
-userNameInput.addEventListener('change', () => {
+userNameInput.addEventListener('change', async () => {
     userName = userNameInput.value.trim();
-    saveToLocalStorage();
+    saveUserName();
+    
+    // If user has already made rolls, update their name in Supabase
+    if (userId) {
+        try {
+            await supabaseClient
+                .from('users')
+                .update({ user_name: userName })
+                .eq('id', userId);
+        } catch (error) {
+            console.error('Error updating user name:', error);
+        }
+    }
 });
 
 // Handle roll button click
-rollButton.addEventListener('click', () => {
+rollButton.addEventListener('click', async () => {
     if (!selectedDice) return;
     
     // Create dice rolling animation
@@ -156,63 +220,80 @@ rollButton.addEventListener('click', () => {
     rollButton.disabled = true;
     
     // Small delay to show rolling animation
-    setTimeout(() => {
-        // Get the number of dice
-        const count = parseInt(diceCountInput.value) || 1;
-        
-        // Roll the dice
-        let result, total, individualResults;
-        
-        if (count === 1) {
-            result = rollDice(selectedDice);
-            diceResult.textContent = result;
-            rollTotalDisplay.textContent = '';
-        } else {
-            const rollResults = rollDice(selectedDice, count);
-            individualResults = rollResults.results;
-            total = rollResults.total;
+    setTimeout(async () => {
+        try {
+            // Get the number of dice
+            const count = parseInt(diceCountInput.value) || 1;
             
-            // For multiple dice, format results to fit better
-            if (count <= 6) {
-                // For fewer dice, just join with commas
-                diceResult.textContent = individualResults.join(', ');
+            // Roll the dice
+            let result, total, individualResults;
+            
+            if (count === 1) {
+                result = rollDice(selectedDice);
+                diceResult.textContent = result;
+                rollTotalDisplay.textContent = '';
+                individualResults = [result];
+                total = result;
             } else {
-                // For more dice, use a more compact format
-                diceResult.textContent = individualResults.slice(0, 3).join(', ') + 
-                                      '... ' + 
-                                      individualResults.slice(-3).join(', ');
+                const rollResults = rollDice(selectedDice, count);
+                individualResults = rollResults.results;
+                total = rollResults.total;
+                
+                // For multiple dice, format results to fit better
+                if (count <= 6) {
+                    // For fewer dice, just join with commas
+                    diceResult.textContent = individualResults.join(', ');
+                } else {
+                    // For more dice, use a more compact format
+                    diceResult.textContent = individualResults.slice(0, 3).join(', ') + 
+                                          '... ' + 
+                                          individualResults.slice(-3).join(', ');
+                }
+                
+                // Show the total
+                rollTotalDisplay.textContent = `Total: ${total}`;
             }
             
-            // Show the total
-            rollTotalDisplay.textContent = `Total: ${total}`;
+            // Format dice type string
+            const diceTypeStr = count === 1 ? `D${selectedDice}` : `${count}D${selectedDice}`;
+            
+            // Make sure user exists in Supabase
+            if (!userId) {
+                userId = await window.supabaseAPI.getOrCreateUser(userName || 'Anonymous');
+                if (!userId) {
+                    throw new Error('Failed to create or get user');
+                }
+            }
+            
+            // Store roll in Supabase
+            await window.supabaseAPI.storeRoll(
+                userId,
+                diceTypeStr,
+                count,
+                individualResults,
+                total
+            );
+            
+            // The real-time subscription will update the history
+            // No need to manually update the display
+            
+        } catch (error) {
+            console.error('Error storing roll:', error);
+            
+            // Show error message to user
+            const errorToast = document.createElement('div');
+            errorToast.className = 'error-toast';
+            errorToast.textContent = 'Failed to save roll. Check your connection.';
+            document.body.appendChild(errorToast);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                errorToast.remove();
+            }, 3000);
+        } finally {
+            // Re-enable roll button
+            rollButton.disabled = false;
         }
-        
-        // Create history entry
-        const historyEntry = {
-            user: userName || 'Anonymous',
-            userId: userId,
-            dice: count === 1 ? `D${selectedDice}` : `${count}D${selectedDice}`,
-            result: count === 1 ? result : individualResults,
-            total: count === 1 ? result : total,
-            timestamp: new Date().toISOString()
-        };
-        
-        // Add to history locally
-        rollHistory.unshift(historyEntry); // Add to beginning of array
-        
-        // Limit local history to last 50 rolls
-        if (rollHistory.length > 50) {
-            rollHistory.pop();
-        }
-        
-        // Update history display
-        updateHistoryDisplay();
-        
-        // Save to local storage
-        saveToLocalStorage();
-        
-        // Re-enable roll button
-        rollButton.disabled = false;
     }, 500);
 });
 
@@ -274,7 +355,58 @@ function updateDiceTypeDisplay() {
     }
 }
 
+// Set up history toggle buttons
+showAllBtn.addEventListener('click', () => {
+    showAllBtn.classList.add('active');
+    showMineBtn.classList.remove('active');
+    showOnlyMyRolls = false;
+    loadRollHistory(); // Reload history with new filter
+});
+
+showMineBtn.addEventListener('click', () => {
+    showMineBtn.classList.add('active');
+    showAllBtn.classList.remove('active');
+    showOnlyMyRolls = true;
+    loadRollHistory(); // Reload history with new filter
+});
+
+// Add style for error toast
+const style = document.createElement('style');
+style.textContent = `
+    .error-toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #ff5252;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 4px;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        animation: fadeIn 0.3s, fadeOut 0.3s 2.7s;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translate(-50%, 20px); }
+        to { opacity: 1; transform: translate(-50%, 0); }
+    }
+    
+    @keyframes fadeOut {
+        from { opacity: 1; transform: translate(-50%, 0); }
+        to { opacity: 0; transform: translate(-50%, 20px); }
+    }
+`;
+document.head.appendChild(style);
+
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
-    initializeFromLocalStorage();
+    // Set a loading message while initializing
+    historyList.innerHTML = '<div class="no-history">Loading...</div>';
+    
+    // Initialize the app
+    initialize().catch(error => {
+        console.error('Error initializing app:', error);
+        historyList.innerHTML = '<div class="no-history">Failed to connect to database. Check your connection.</div>';
+    });
 });

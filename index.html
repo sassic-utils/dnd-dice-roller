@@ -8,6 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Supabase client library -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase.js"></script>
 </head>
 <body>
     <div class="container">
@@ -55,10 +58,15 @@
             
             <div class="history-section">
                 <h2>Roll History</h2>
+                <div class="history-controls">
+                    <button id="show-all-btn" class="history-toggle active">All Rolls</button>
+                    <button id="show-mine-btn" class="history-toggle">My Rolls</button>
+                </div>
                 <div class="history-list" id="history-list">
                     <!-- Roll history will be populated here -->
                     <div class="no-history">No rolls yet</div>
                 </div>
+                <div id="loading-indicator" class="loading-indicator hidden">Loading...</div>
             </div>
         </main>
         

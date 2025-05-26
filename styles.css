@@ -223,6 +223,44 @@ header h1 {
     text-align: center;
 }
 
+.history-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.history-toggle {
+    padding: 8px 15px;
+    background-color: #f5f0ff;
+    border: 1px solid #7b2cbf;
+    border-radius: 4px;
+    color: #7b2cbf;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.history-toggle.active {
+    background-color: #7b2cbf;
+    color: white;
+}
+
+.history-toggle:hover {
+    background-color: #e2d5f8;
+    color: #5a189a;
+}
+
+.loading-indicator {
+    text-align: center;
+    padding: 10px;
+    color: #7b2cbf;
+    font-style: italic;
+}
+
+.hidden {
+    display: none;
+}
+
 .history-list {
     max-height: 300px;
     overflow-y: auto;
