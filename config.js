@@ -1,6 +1,6 @@
 // Supabase Configuration
 // This file should be gitignored in production
 window.SUPABASE_CONFIG = {
-    URL: 'https://your-supabase-project-url.supabase.co',
-    ANON_KEY: 'your-supabase-anon-key'
+    URL: process.env.VITE_SUPABASE_URL,
+    ANON_KEY: process.env.VITE_SUPABASE_ANON_KEY
 };
