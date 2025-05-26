@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D&D Dice Roller</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>D&D Dice Roller</h1>
+        </header>
+        
+        <main>
+            <div class="user-section">
+                <label for="user-name">Your Name:</label>
+                <input type="text" id="user-name" placeholder="Enter your name">
+            </div>
+            
+            <div class="dice-section">
+                <div class="dice-selector">
+                    <h2>Select Dice</h2>
+                    <div class="dice-buttons">
+                        <button class="dice-btn" data-dice="4">D4</button>
+                        <button class="dice-btn" data-dice="6">D6</button>
+                        <button class="dice-btn" data-dice="8">D8</button>
+                        <button class="dice-btn" data-dice="10">D10</button>
+                        <button class="dice-btn" data-dice="12">D12</button>
+                        <button class="dice-btn" data-dice="20">D20</button>
+                        <button class="dice-btn" data-dice="100">D100</button>
+                    </div>
+                </div>
+                
+                <div class="roll-section">
+                    <div class="dice-quantity">
+                        <label for="dice-count">Number of Dice:</label>
+                        <div class="quantity-control">
+                            <button id="decrease-dice">-</button>
+                            <input type="number" id="dice-count" value="1" min="1" max="20">
+                            <button id="increase-dice">+</button>
+                        </div>
+                    </div>
+                    <div class="roll-display">
+                        <div id="dice-result">?</div>
+                        <div id="dice-type">Select a dice to roll</div>
+                    </div>
+                    <div class="roll-total" id="roll-total"></div>
+                    <button id="roll-btn" disabled>Roll</button>
+                </div>
+            </div>
+            
+            <div class="history-section">
+                <h2>Roll History</h2>
+                <div class="history-list" id="history-list">
+                    <!-- Roll history will be populated here -->
+                    <div class="no-history">No rolls yet</div>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 D&D Dice Roller | Made with ❤️ for Tabletop Gamers</p>
+        </footer>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

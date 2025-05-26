@@ -1,0 +1,329 @@
+/* Global Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f0ff;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1, h2, h3 {
+    font-family: 'MedievalSharp', cursive;
+    color: #7b2cbf;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+/* User Section */
+.user-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.user-section label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #7b2cbf;
+}
+
+.user-section input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.user-section input:focus {
+    outline: none;
+    border-color: #7b2cbf;
+}
+
+/* Dice Section */
+.dice-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.dice-selector, .roll-section {
+    flex: 1;
+    min-width: 300px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dice-selector h2, .roll-section h2 {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Dice Buttons */
+.dice-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+}
+
+.dice-btn {
+    padding: 12px 0;
+    background-color: #f5f0ff;
+    border: 2px solid #7b2cbf;
+    border-radius: 4px;
+    color: #7b2cbf;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.dice-btn:hover {
+    background-color: #e2d5f8;
+}
+
+.dice-btn.active {
+    background-color: #7b2cbf;
+    color: white;
+}
+
+/* Dice Quantity */
+.dice-quantity {
+    margin-bottom: 20px;
+}
+
+.dice-quantity label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #7b2cbf;
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+}
+
+.quantity-control button {
+    width: 36px;
+    height: 36px;
+    background-color: #7b2cbf;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.quantity-control input {
+    width: 60px;
+    height: 36px;
+    margin: 0 10px;
+    text-align: center;
+    border: 2px solid #7b2cbf;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+/* Roll Display */
+.roll-display {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#dice-result {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #7b2cbf;
+    font-family: 'MedievalSharp', cursive;
+    margin-bottom: 5px;
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#dice-type {
+    font-size: 1rem;
+    color: #666;
+}
+
+.roll-total {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #5a189a;
+    margin-bottom: 15px;
+    min-height: 28px;
+}
+
+#roll-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #7b2cbf;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+#roll-btn:hover:not(:disabled) {
+    background-color: #5a189a;
+}
+
+#roll-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* History Section */
+.history-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.history-section h2 {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.history-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.history-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.history-item:last-child {
+    border-bottom: none;
+}
+
+.roll-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.roll-user {
+    font-weight: bold;
+    color: #7b2cbf;
+}
+
+.roll-dice {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.roll-value {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.roll-individual {
+    display: block;
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 5px;
+}
+
+.roll-total {
+    font-weight: bold;
+    color: #7b2cbf;
+}
+
+.no-history {
+    text-align: center;
+    color: #999;
+    padding: 20px;
+    font-style: italic;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 30px;
+    color: #777;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .dice-section {
+        flex-direction: column;
+    }
+    
+    .dice-selector, .roll-section {
+        width: 100%;
+    }
+    
+    header h1 {
+        font-size: 2.2rem;
+    }
+    
+    .dice-btn {
+        padding: 10px 0;
+    }
+}
+
+/* Animation for dice rolling */
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+.rolling {
+    animation: shake 0.5s;
+    animation-iteration-count: 1;
+}
