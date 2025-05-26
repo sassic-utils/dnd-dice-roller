@@ -24,7 +24,7 @@ jobs:
         VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
     - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@releases/v3
+      uses: JamesIves/github-pages-deploy-action@4.0.0
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages
