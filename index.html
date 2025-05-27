@@ -10,12 +10,14 @@
     <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <!-- Supabase client library -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <!-- Supabase configuration - these values should be set during the build process for production -->
+    <!-- Load Supabase configuration from external file (created by CI) or fallback to local development values -->
     <script>
-        // Set Supabase configuration variables
+        // Default values for local development only
         window.SUPABASE_URL = 'https://your-supabase-project-url.supabase.co';
         window.SUPABASE_KEY = 'your-supabase-anon-key';
     </script>
+    <!-- Config file will be created by GitHub Actions and override the above defaults -->
+    <script src="config.js"></script>
     <script src="supabase.js"></script>
 </head>
 <body>
