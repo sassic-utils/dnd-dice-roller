@@ -1,10 +1,7 @@
-// Supabase configuration
-// Instead of using process.env which isn't available in browsers, we'll define the values directly
-// For production, these should be injected during the build process or loaded from a config
-const SUPABASE_URL = window.SUPABASE_URL || 'https://sltyrzioowontcuteqwj.supabase.co';
-const SUPABASE_KEY = window.SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNsdHlyemlvb3dvbnRjdXRlcXdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgyNjI5OTQsImV4cCI6MjA2MzgzODk5NH0.Y2d8noHfnUSRbN1w5KJyVFTCYv33CSmTFsZ61xitakM';
+const SUPABASE_URL = window.SUPABASE_URL;
+const SUPABASE_KEY = window.SUPABASE_KEY;
+console.log(SUPABASE_URL, SUPABASE_KEY);
 
-// Initialize the Supabase client
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // User functions
