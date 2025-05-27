@@ -1,6 +1,5 @@
 const SUPABASE_URL = window.SUPABASE_URL;
 const SUPABASE_KEY = window.SUPABASE_KEY;
-console.log(SUPABASE_URL, SUPABASE_KEY);
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
