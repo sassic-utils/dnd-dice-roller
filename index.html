@@ -12,23 +12,12 @@
     <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
-    <script>
-        (function() {
-            // Dynamically load the local config file if it exists
-            const localConfig = document.createElement('script');
-            localConfig.src = 'config.local.js';
-            localConfig.onerror = function() {
-                console.log('No local config found, using production values');
-            };
-            document.head.appendChild(localConfig);
-        })();
-    </script>
     <script src="supabase.js"></script>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>D&D Dice Roller Update</h1>
+            <h1>D&D Dice Roller</h1>
         </header>
         
         <main>
