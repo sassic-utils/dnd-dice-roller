@@ -8,19 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <!-- Supabase client library -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <!-- Load Supabase configuration from external file -->
-    <!-- For local development, use config.local.js (which is git-ignored) -->
-    <!-- For production, config.js will be created by GitHub Actions -->
-    <script>
-        // Initialize empty values - will be overridden by config files
-        window.SUPABASE_URL = '';
-        window.SUPABASE_KEY = '';
-    </script>
-    <!-- Load base config (empty values in repo) -->
     <script src="config.js"></script>
-    <!-- Load local config for development (git-ignored) if it exists -->
     <script>
         (function() {
             // Dynamically load the local config file if it exists
