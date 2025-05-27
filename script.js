@@ -274,8 +274,8 @@ rollButton.addEventListener('click', async () => {
                 total
             );
             
-            // The real-time subscription will update the history
-            // No need to manually update the display
+            // Explicitly refresh the history immediately instead of waiting for the real-time subscription
+            await loadRollHistory();
             
         } catch (error) {
             console.error('Error storing roll:', error);
