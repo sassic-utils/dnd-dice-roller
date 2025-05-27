@@ -10,14 +10,28 @@
     <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <!-- Supabase client library -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <!-- Load Supabase configuration from external file (created by CI) or fallback to local development values -->
+    <!-- Load Supabase configuration from external file -->
+    <!-- For local development, use config.local.js (which is git-ignored) -->
+    <!-- For production, config.js will be created by GitHub Actions -->
     <script>
-        // Default values for local development only
-        window.SUPABASE_URL = 'https://sltyrzioowontcuteqwj.supabase.co';
-        window.SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNsdHlyemlvb3dvbnRjdXRlcXdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgyNjI5OTQsImV4cCI6MjA2MzgzODk5NH0.Y2d8noHfnUSRbN1w5KJyVFTCYv33CSmTFsZ61xitakM';
+        // Initialize empty values - will be overridden by config files
+        window.SUPABASE_URL = '';
+        window.SUPABASE_KEY = '';
     </script>
-    <!-- Config file will be created by GitHub Actions and override the above defaults -->
+    <!-- Load base config (empty values in repo) -->
     <script src="config.js"></script>
+    <!-- Load local config for development (git-ignored) if it exists -->
+    <script>
+        (function() {
+            // Dynamically load the local config file if it exists
+            const localConfig = document.createElement('script');
+            localConfig.src = 'config.local.js';
+            localConfig.onerror = function() {
+                console.log('No local config found, using production values');
+            };
+            document.head.appendChild(localConfig);
+        })();
+    </script>
     <script src="supabase.js"></script>
 </head>
 <body>
