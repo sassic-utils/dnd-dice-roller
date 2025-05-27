@@ -41,6 +41,7 @@ jobs:
         
         # Debug output (without exposing secrets)
         ls -la config.js
+        
 
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@v4
