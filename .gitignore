@@ -1,0 +1,21 @@
+# Environment variables
+.env
+.env.local
+config.local.js
+
+# Build files
+dist/
+build/
+
+# Dependency directories
+node_modules/
+
+# IDE/Editor folders
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
