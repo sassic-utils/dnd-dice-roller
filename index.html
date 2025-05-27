@@ -10,6 +10,12 @@
     <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <!-- Supabase client library -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <!-- Supabase configuration - these values should be set during the build process for production -->
+    <script>
+        // Set Supabase configuration variables
+        window.SUPABASE_URL = 'https://your-supabase-project-url.supabase.co';
+        window.SUPABASE_KEY = 'your-supabase-anon-key';
+    </script>
     <script src="supabase.js"></script>
 </head>
 <body>

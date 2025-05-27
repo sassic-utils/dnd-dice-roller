@@ -1,6 +1,8 @@
 // Supabase configuration
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
-const SUPABASE_KEY = process.env.VITE_SUPABASE_ANON_KEY;
+// Instead of using process.env which isn't available in browsers, we'll define the values directly
+// For production, these should be injected during the build process or loaded from a config
+const SUPABASE_URL = window.SUPABASE_URL || 'your-supabase-url';
+const SUPABASE_KEY = window.SUPABASE_KEY || 'your-supabase-anon-key';
 
 // Initialize the Supabase client
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
