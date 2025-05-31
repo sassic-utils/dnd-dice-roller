@@ -150,8 +150,8 @@ const updateHistoryDisplay = () => {
         historyList.appendChild(historyItem);
     });
     
-    // Scroll to the bottom of the history list
-    historyList.scrollTop = historyList.scrollHeight;
+    // Scroll to the top of the history list
+    historyList.scrollTop = 0;
 };
 
 // Roll the dice
