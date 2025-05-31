@@ -89,7 +89,7 @@ async function fetchUserRolls(userId) {
                 users (id, user_name)
             `)
             .eq('user_id', userId)
-            .order('created_at', { ascending: false })
+            .order('created_at', { ascending: true })
             .limit(50);
             
         if (error) throw error;
