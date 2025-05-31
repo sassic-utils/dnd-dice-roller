@@ -63,7 +63,7 @@ async function fetchAllRolls() {
                 created_at,
                 users (id, user_name)
             `)
-            .order('created_at', { ascending: false })
+            .order('created_at', { ascending: true })
             .limit(50);
             
         if (error) throw error;
