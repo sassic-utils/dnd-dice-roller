@@ -193,17 +193,14 @@ diceButtons.forEach(button => {
 });
 
 // Handle user name input
-userNameInput.addEventListener('change', async () => {
+userNameInput.addEventListener('input', async () => {
     userName = userNameInput.value.trim();
     saveUserName();
     
     // If user has already made rolls, update their name in Supabase
     if (userId) {
         try {
-            await supabaseClient
-                .from('users')
-                .update({ user_name: userName })
-                .eq('id', userId);
+            await window.supabaseAPI.updateUserName(userId, userName);
         } catch (error) {
             console.error('Error updating user name:', error);
         }
@@ -222,6 +219,9 @@ rollButton.addEventListener('click', async () => {
     // Small delay to show rolling animation
     setTimeout(async () => {
         try {
+            userName = userNameInput.value.trim();
+            saveUserName();
+
             // Get the number of dice
             const count = parseInt(diceCountInput.value) || 1;
             

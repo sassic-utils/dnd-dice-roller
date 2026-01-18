@@ -23,9 +23,37 @@ async function getOrCreateUser(userName) {
         
         userId = data.id;
         localStorage.setItem('supabaseUserId', userId);
+    } else if (userName && userName.trim()) {
+        try {
+            await supabaseClient
+                .from('users')
+                .update({ user_name: userName.trim() })
+                .eq('id', userId);
+        } catch (error) {
+            console.error('Error updating user name:', error);
+        }
     }
     
     return userId;
+}
+
+async function updateUserName(userId, userName) {
+    if (!userId) return null;
+    const name = (userName || '').trim();
+    if (!name) return null;
+
+    try {
+        const { data, error } = await supabaseClient
+            .from('users')
+            .update({ user_name: name })
+            .eq('id', userId);
+
+        if (error) throw error;
+        return data;
+    } catch (error) {
+        console.error('Error updating user name:', error);
+        return null;
+    }
 }
 
 // Roll functions
@@ -116,6 +144,7 @@ function subscribeToRolls(callback) {
 // Export functions for use in main script
 window.supabaseAPI = {
     getOrCreateUser,
+    updateUserName,
     storeRoll,
     fetchAllRolls,
     fetchUserRolls,
