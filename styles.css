@@ -27,6 +27,10 @@ button {
     cursor: pointer;
 }
 
+button, input {
+    touch-action: manipulation;
+}
+
 /* Header */
 header {
     text-align: center;
@@ -329,6 +333,10 @@ footer {
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
+    .container {
+        padding: 14px;
+    }
+
     .dice-section {
         flex-direction: column;
     }
@@ -343,6 +351,96 @@ footer {
     
     .dice-btn {
         padding: 10px 0;
+    }
+
+    .history-controls {
+        flex-wrap: wrap;
+    }
+
+    .history-toggle {
+        flex: 1;
+        min-width: 140px;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        margin-bottom: 18px;
+    }
+
+    header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+    }
+
+    .user-section,
+    .dice-selector,
+    .roll-section,
+    .history-section {
+        padding: 14px;
+    }
+
+    .dice-selector, .roll-section {
+        min-width: 0;
+    }
+
+    .dice-buttons {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    .dice-btn {
+        padding: 12px 0;
+        font-size: 0.95rem;
+        min-height: 44px;
+    }
+
+    .quantity-control {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .quantity-control input {
+        margin: 0;
+        width: 72px;
+    }
+
+    .quantity-control button {
+        width: 44px;
+        height: 44px;
+    }
+
+    #dice-result {
+        font-size: 2.2rem;
+        min-height: 56px;
+    }
+
+    #roll-btn {
+        min-height: 48px;
+    }
+
+    .history-list {
+        max-height: 45vh;
+    }
+
+    .history-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .roll-value {
+        width: 100%;
+    }
+
+    .roll-info {
+        width: 100%;
+    }
+
+    .roll-user,
+    .roll-dice {
+        word-break: break-word;
     }
 }
 
