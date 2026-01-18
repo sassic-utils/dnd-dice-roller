@@ -8,7 +8,6 @@ const historyList = document.getElementById('history-list');
 const diceCountInput = document.getElementById('dice-count');
 const decreaseDiceBtn = document.getElementById('decrease-dice');
 const increaseDiceBtn = document.getElementById('increase-dice');
-const countPresetButtons = document.querySelectorAll('.count-btn');
 const rollTotalDisplay = document.getElementById('roll-total');
 const showAllBtn = document.getElementById('show-all-btn');
 const showMineBtn = document.getElementById('show-mine-btn');
@@ -22,23 +21,6 @@ let diceCount = 1;
 let userId = null;
 let showOnlyMyRolls = false;
 let subscription = null;
-
-function setDiceCount(nextCount) {
-    let count = parseInt(nextCount) || 1;
-    if (count < 1) count = 1;
-    if (count > 20) count = 20;
-    diceCountInput.value = count;
-    updateDiceTypeDisplay();
-    updateCountPresetActiveState();
-}
-
-function updateCountPresetActiveState() {
-    const current = parseInt(diceCountInput.value) || 1;
-    countPresetButtons.forEach(btn => {
-        const btnCount = parseInt(btn.dataset.count);
-        btn.classList.toggle('active', btnCount === current);
-    });
-}
 
 // Initialize app and load data from Supabase
 const initialize = async () => {
@@ -56,9 +38,6 @@ const initialize = async () => {
     
     // Load initial history data
     await loadRollHistory();
-
-    // Sync preset button state with the current input value
-    updateCountPresetActiveState();
 };
 
 // Save user name to localStorage
@@ -341,7 +320,8 @@ decreaseDiceBtn.addEventListener('click', () => {
     let count = parseInt(diceCountInput.value) || 1;
     if (count > 1) {
         count--;
-        setDiceCount(count);
+        diceCountInput.value = count;
+        updateDiceTypeDisplay();
     }
 });
 
@@ -349,18 +329,20 @@ increaseDiceBtn.addEventListener('click', () => {
     let count = parseInt(diceCountInput.value) || 1;
     if (count < 20) { // Limit to 20 dice
         count++;
-        setDiceCount(count);
+        diceCountInput.value = count;
+        updateDiceTypeDisplay();
     }
 });
 
 diceCountInput.addEventListener('change', () => {
-    setDiceCount(diceCountInput.value);
-});
+    let count = parseInt(diceCountInput.value) || 1;
 
-countPresetButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-        setDiceCount(btn.dataset.count);
-    });
+    // Enforce limits
+    if (count < 1) count = 1;
+    if (count > 20) count = 20;
+
+    diceCountInput.value = count;
+    updateDiceTypeDisplay();
 });
 
 // Update the dice type display with count
