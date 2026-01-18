@@ -159,6 +159,37 @@ header h1 {
     font-size: 1rem;
 }
 
+.count-presets {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.count-btn {
+    padding: 10px 12px;
+    min-height: 40px;
+    min-width: 44px;
+    background-color: #f5f0ff;
+    border: 1px solid #7b2cbf;
+    border-radius: 999px;
+    color: #7b2cbf;
+    font-weight: bold;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.count-btn:hover {
+    background-color: #e2d5f8;
+    color: #5a189a;
+}
+
+.count-btn.active {
+    background-color: #7b2cbf;
+    color: white;
+}
+
 /* Roll Display */
 .roll-display {
     text-align: center;
@@ -401,6 +432,14 @@ footer {
         flex-wrap: wrap;
         justify-content: center;
         gap: 10px;
+    }
+
+    .count-presets {
+        gap: 10px;
+    }
+
+    .count-btn {
+        min-height: 44px;
     }
 
     .quantity-control input {
